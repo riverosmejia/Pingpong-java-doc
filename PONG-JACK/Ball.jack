@@ -1,0 +1,84 @@
+class Ball {
+    field int x;
+    field int y;
+    field int dx;
+    field int dy;
+    field int d;    // diámetro
+    field int speed;
+
+    constructor Ball new(int xPos, int yPos, int dirX, int dirY) {
+        let x = xPos;
+        let y = yPos;
+        let dx = dirX; // cambio de posicion en X
+        let dy = dirY; // cambio de posicion en Y
+        let d = 8;
+        let speed = 2;
+        return this;
+    }
+
+    // Dibuja la esfera en pantalla
+    method void draw() {
+        do Screen.setColor(true);
+        do Screen.drawCircle(x, y, d / 2);
+        return;
+    }
+
+    method void erase() {
+        do Screen.setColor(false);
+        do Screen.drawCircle(x, y, d / 2);
+        return;
+    }
+
+    // Colisión AABB simple: devuelve 1 si overlap con player
+    method boolean overlapsWith(Player p) {
+        var int px; var int py; var int pw; var int ph;
+        // compute ball bbox
+        var int bx1, by1, bx2, by2;
+        let px = p.getX();   // necesitamos agregar getX() en Player si se requiere
+        let py = p.getY();
+        let pw = p.getWidth();
+        let ph = p.getHeight();
+
+        let bx1 = x - d/2;
+        let by1 = y - d/2;
+        let bx2 = x + d/2;
+        let by2 = y + d/2;
+
+        // check overlap: !(right < left || left > right || bottom < top || top > bottom)
+        if ((bx2 < px) | (bx1 > (px + pw)) | (by2 < py) | (by1 > (py + ph))) {
+            return false;
+        }
+        return true;
+    }
+
+    // Actualiza la posición y rebotes contra top/bottom
+    method void update() {
+        do erase();
+        let x = x + (dx * speed);
+        let y = y + (dy * speed);
+
+        // top/bottom collisions (screenHeight assumed 256)
+        if (y < 4) { let y = 4; let dy = -dy; }
+        if (y > 252) { let y = 252; let dy = -dy; }
+
+        do draw();
+        return;
+    }
+
+    method void invertX() {
+        let dx = -dx;
+        return;
+    }
+
+    method void reset(int cx, int cy, int dirX, int dirY) {
+        let x = cx;
+        let y = cy;
+        let dx = dirX;
+        let dy = dirY;
+        return;
+    }
+
+    // getters
+    method int getX() { return x; }
+    method int getY() { return y; }
+}
