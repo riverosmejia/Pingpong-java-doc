@@ -1,0 +1,25 @@
+class Score {
+    field int p1, p2;
+
+    constructor Score new() {
+        let p1 = 0;
+        let p2 = 0;
+        return this;
+    }
+
+    method void addPoint(int player) {
+        if (player = 1) { let p1 = p1 + 1; }
+        else { let p2 = p2 + 1; }
+        return;
+    }
+
+    method void draw() {
+        do Screen.setColor(true);
+        do Screen.printString("P1: ");
+        do Screen.printInt(p1);
+        do Screen.printString("   P2: ");
+        do Screen.printInt(p2);
+        do Screen.printString("\n");
+        return;
+    }
+}

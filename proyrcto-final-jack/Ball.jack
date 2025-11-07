@@ -1,0 +1,81 @@
+class Ball {
+    field int x, y;
+    field int dx, dy;
+
+    constructor Ball new(int startX, int startY) {
+        let x = startX;
+        let y = startY;
+        let dx = 2;
+        let dy = 2;
+        return this;
+    }
+
+    method void update(Paddle p1, Paddle p2, Score s) {
+        var int p1x, p1y, p2x, p2y;
+        var int tmp1, tmp2, tmp3, tmp4, tmp5, tmp6;
+
+        let x = x + dx;
+        let y = y + dy;
+
+        if (y < 0) {
+            let dy = dy * (-1);
+        }
+
+        if (y > 230) {
+            let dy = dy * (-1);
+        }
+
+        // --- Paleta 1 ---
+        let p1x = p1.getX();
+        let p1y = p1.getY();
+
+        let tmp1 = p1x;
+        let tmp2 = tmp1 + 5;     // <= línea 33 (separada en otra var)
+
+        if (x <= tmp2) {
+            if (y > p1y) {
+                let tmp3 = p1y;
+                let tmp4 = tmp3 + 30;  // <= misma idea
+                if (y < tmp4) {
+                    let dx = dx * (-1);
+                }
+            }
+        }
+
+        // --- Paleta 2 ---
+        let p2x = p2.getX();
+        let p2y = p2.getY();
+
+        let tmp5 = p2x;
+        let tmp6 = tmp5 - 5;     // <= línea 47 (sin reutilizar)
+
+        if (x >= tmp6) {
+            if (y > p2y) {
+                let tmp3 = p2y;
+                let tmp4 = tmp3 + 30;
+                if (y < tmp4) {
+                    let dx = dx * (-1);
+                }
+            }
+        }
+
+        // --- Puntos ---
+        if (x < 0) {
+            do s.addPoint(2);
+            let x = 250;
+            let y = 120;
+        }
+
+        if (x > 500) {
+            do s.addPoint(1);
+            let x = 250;
+            let y = 120;
+        }
+
+        return;
+    }
+
+    method void draw() {
+        return;
+    }
+}
