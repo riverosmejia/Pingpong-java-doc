@@ -1,0 +1,75 @@
+class Player {
+
+    field int x;
+    field int y;
+    field int yDir;
+    field int w;
+    field int h;
+    field int b;
+
+    constructor Player new(int xPos, int yPos, int direction) {
+        let x = xPos;
+        let y = yPos;
+        let yDir = direction;
+
+        // Valores constantes
+        let w = 10; // Ancho del jugador
+        let h = 25; // Alto del jugador
+        let b = 15; // Limite areal de juego
+
+        return this;
+    }
+
+    
+    method void setDirection(int direction) {
+        let yDir = direction;
+        return;
+    }
+
+    
+    method int getX() {
+        return x;
+    }
+
+    method int getY() {
+        return y;
+    }
+
+    method int getWidth() {
+        return w;
+    }
+
+    method int getHeight() {
+        return h;
+    }
+
+    // Dibuja al jugador en pantalla
+    method void draw() {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x, y, x + w - 1, y + h - 1);
+        return;
+    }
+
+    // Borra al jugador de pantalla
+    method void erase() {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x, y, x + w - 1, y + h - 1);
+        return;
+    }
+
+    // Actualiza la posición del jugador
+    method void update(int screenHeight) {
+        do erase();
+
+        let y = y + yDir;
+        if (y < b) {
+            let y = b;
+        }
+        if (y > (screenHeight - b - h)) {
+            let y = screenHeight - b - h;
+        }
+
+        do draw();
+        return;
+    }
+}

@@ -1,0 +1,77 @@
+// Main.jack
+class Main {
+    function void main() {
+        var Player p1; var Player p2; var Ball ball;
+        var int screenW; var int screenH;
+        var int key;
+
+        let screenW = 512;
+        let screenH = 256;
+
+        // inicializar objetos (ejemplo: p1 izquierda, p2 derecha)
+        let p1 = Player.new(10, (screenH/2) - 12, 0);
+        let p2 = Player.new((screenW - 20), (screenH/2) - 12, 0);
+        let ball = Ball.new((screenW/2), (screenH/2), 1, 1);
+
+        // limpiar pantalla
+        do Screen.clearScreen();
+
+        // draw inicial
+        do p1.draw();
+        do p2.draw();
+        do ball.draw();
+
+        // game loop
+        while (true) {
+            // leer teclado sin bloquear
+            let key = Keyboard.keyPressed(); // 0 si nada
+            if (~(key = 0)) {        // Si alguna tecla está presionada
+    if (key = 119) {     // 'w' = ASCII 119
+        do p1.setDirection(-2);
+    } else {
+        if (key = 115) { // 's' = ASCII 115
+            do p1.setDirection(2);
+        } else {
+            do p1.setDirection(0);
+        }
+    }
+}
+
+
+            // controlar p2 con flechas ↑ y ↓
+if (~(key = 0)) {
+    if (key = 131) {        // Flecha Arriba
+        do p2.setDirection(-2);
+    } else {
+        if (key = 133) {    // Flecha Abajo
+            do p2.setDirection(2);
+        } else {
+            do p2.setDirection(0);
+        }
+    }
+}
+
+
+            // actualizar posiciones (nota: p.update los dibuja/borra)
+            do p1.update(screenH);
+            do p2.update(screenH);
+            do ball.update();
+
+            // colisiones pelota-paletas
+            if (ball.overlapsWith(p1)) {
+                do ball.invertX();
+            }
+            if (ball.overlapsWith(p2)) {
+                do ball.invertX();
+            }
+
+            // Si la bola sale por x (goleada), reset y asignar punto (no implementado aquí)
+            // ...
+
+            // frame pacing
+            do Sys.wait(4); // ajustar para velocidad; Sys.wait(n) pausa unos n ticks
+        }
+
+        return;
+    }
+}

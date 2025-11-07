@@ -1,0 +1,169 @@
+function Main.main 6
+    push constant 512
+    pop local 3
+    push constant 256
+    pop local 4
+    push constant 10
+    push local 4
+    push constant 2
+    call Math.divide 2
+    push constant 12
+    sub
+    push constant 0
+    call Player.new 3
+    pop local 0
+    push local 3
+    push constant 20
+    sub
+    push local 4
+    push constant 2
+    call Math.divide 2
+    push constant 12
+    sub
+    push constant 0
+    call Player.new 3
+    pop local 1
+    push local 3
+    push constant 2
+    call Math.divide 2
+    push local 4
+    push constant 2
+    call Math.divide 2
+    push constant 1
+    push constant 1
+    call Ball.new 4
+    pop local 2
+    call Screen.clearScreen 0
+    pop temp 0
+    push local 0
+    call Player.draw 1
+    pop temp 0
+    push local 1
+    call Player.draw 1
+    pop temp 0
+    push local 2
+    call Ball.draw 1
+    pop temp 0
+label Main_0
+    push constant 1
+    neg
+    not
+    if-goto Main_1
+    call Keyboard.keyPressed 0
+    pop local 5
+    push local 5
+    push constant 0
+    eq
+    not
+    not
+    if-goto Main_3
+    push local 5
+    push constant 119
+    eq
+    not
+    if-goto Main_5
+    push local 0
+    push constant 2
+    neg
+    call Player.setDirection 2
+    pop temp 0
+    goto Main_4
+label Main_5
+    push local 5
+    push constant 115
+    eq
+    not
+    if-goto Main_7
+    push local 0
+    push constant 2
+    call Player.setDirection 2
+    pop temp 0
+    goto Main_6
+label Main_7
+    push local 0
+    push constant 0
+    call Player.setDirection 2
+    pop temp 0
+label Main_6
+label Main_4
+    goto Main_2
+label Main_3
+label Main_2
+    push local 5
+    push constant 0
+    eq
+    not
+    not
+    if-goto Main_9
+    push local 5
+    push constant 131
+    eq
+    not
+    if-goto Main_11
+    push local 1
+    push constant 2
+    neg
+    call Player.setDirection 2
+    pop temp 0
+    goto Main_10
+label Main_11
+    push local 5
+    push constant 133
+    eq
+    not
+    if-goto Main_13
+    push local 1
+    push constant 2
+    call Player.setDirection 2
+    pop temp 0
+    goto Main_12
+label Main_13
+    push local 1
+    push constant 0
+    call Player.setDirection 2
+    pop temp 0
+label Main_12
+label Main_10
+    goto Main_8
+label Main_9
+label Main_8
+    push local 0
+    push local 4
+    call Player.update 2
+    pop temp 0
+    push local 1
+    push local 4
+    call Player.update 2
+    pop temp 0
+    push local 2
+    call Ball.update 1
+    pop temp 0
+    push local 2
+    push local 0
+    call Ball.overlapsWith 2
+    not
+    if-goto Main_15
+    push local 2
+    call Ball.invertX 1
+    pop temp 0
+    goto Main_14
+label Main_15
+label Main_14
+    push local 2
+    push local 1
+    call Ball.overlapsWith 2
+    not
+    if-goto Main_17
+    push local 2
+    call Ball.invertX 1
+    pop temp 0
+    goto Main_16
+label Main_17
+label Main_16
+    push constant 4
+    call Sys.wait 1
+    pop temp 0
+    goto Main_0
+label Main_1
+    push constant 0
+    return
