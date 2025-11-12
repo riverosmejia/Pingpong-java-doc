@@ -31,25 +31,28 @@ class Ball {
 
     // Colisión AABB simple: devuelve 1 si overlap con player
     method boolean overlapsWith(Player p) {
-        var int px; var int py; var int pw; var int ph;
-        // compute ball bbox
+        var int px, py, pw, ph;
         var int bx1, by1, bx2, by2;
-        let px = p.getX();   // necesitamos agregar getX() en Player si se requiere
+
+        let px = p.getX();
         let py = p.getY();
         let pw = p.getWidth();
         let ph = p.getHeight();
 
-        let bx1 = x - d/2;
-        let by1 = y - d/2;
-        let bx2 = x + d/2;
-        let by2 = y + d/2;
+        let bx1 = x;
+        let by1 = y;
+        let bx2 = x + d;
+        let by2 = y + d;
 
-        // check overlap: !(right < left || left > right || bottom < top || top > bottom)
+        // Si no se superponen → false
         if ((bx2 < px) | (bx1 > (px + pw)) | (by2 < py) | (by1 > (py + ph))) {
             return false;
         }
+
+        // Si se solapan → true
         return true;
     }
+
 
     // Actualiza la posición y rebotes contra top/bottom
     method void update() {
@@ -70,6 +73,11 @@ class Ball {
         return;
     }
 
+    method void invertY() {
+        let dy= -dy;
+        return;
+    }
+
     method void reset(int cx, int cy, int dirX, int dirY) {
         let x = cx;
         let y = cy;
@@ -78,7 +86,11 @@ class Ball {
         return;
     }
 
+
+
     // getters
     method int getX() { return x; }
     method int getY() { return y; }
+    method int getDiameter() {return d;}
+
 }

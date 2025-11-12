@@ -1,0 +1,110 @@
+class Game {
+    field Player player1, player2;
+    field Ball ball;
+    field int width, height;
+
+    /** Constructor: crea jugadores y bola */
+    constructor Game new(int screenWidth, int screenHeight) {
+        let width = screenWidth;
+        let height = screenHeight;
+
+        let player1 = Player.new(10, height / 2 - 10,0);
+        let player2 = Player.new(width - 20, height / 2 - 10,0);
+        let ball = Ball.new(width / 2, height / 2,1, 1);
+
+        return this;
+    }
+
+    /** Bucle principal del juego */
+    method void start() {
+        while (true) {
+            do processInput();
+            do update();
+            do render();
+            do Sys.wait(4);
+        }
+        return;
+    }
+
+    /** Procesa las teclas de entrada */
+    method void processInput() {
+        var char key;
+        let key = Keyboard.keyPressed();
+
+        // Jugador 1 (izquierda) — W/S
+        if (key = 119) {
+            do player1.setDirection(-3);
+        } else {
+            if (key = 115) {
+                do player1.setDirection(3);
+            } else {
+                do player1.setDirection(0);
+            }
+        }
+
+
+        // Jugador 2 (derecha) — ↑/↓
+        if (key = 131) {           // Arrow Up
+            do player2.setDirection(-3);
+        } else {
+            if (key = 133) {       // Arrow Down
+                do player2.setDirection(3);
+            } else {
+                do player2.setDirection(0);
+            }
+        }
+
+        return;
+    }
+
+    /** Actualiza estado del juego */
+    method void update() {
+        var int ballX, ballY, ballD;
+        let ballX = ball.getX();
+        let ballY = ball.getY();
+        let ballD = ball.getDiameter();
+
+        // Actualizar posiciones
+        do player1.update(height);
+        do player2.update(height);
+        do ball.update();
+
+        // Colisiones con palas
+        if (ball.overlapsWith(player1)) {
+            do ball.invertX();
+        }
+        if (ball.overlapsWith(player2)) {
+            do ball.invertX();
+        }
+
+        // Colisión con techo
+        if (~(ballY > 0)) {
+            do ball.invertY();
+        }
+
+        // Colisión con piso
+        if (~((ballY + ballD) < height)) {
+            do ball.invertX();
+        }
+
+        // Salida por izquierda o derecha → reinicia bola
+        if (~(ballX > 0)) {
+            do ball.reset(width / 2, height / 2,1,1);
+        }
+        if (~((ballX + ballD) < width)) {
+            do ball.reset(width / 2, height / 2,1,1);
+        }
+
+        return;
+    }
+
+    /** Renderiza los elementos del juego */
+    method void render() {
+        do Screen.clearScreen();
+        do player1.draw();
+        do player2.draw();
+        do ball.draw();
+        return;
+    }
+}
+
