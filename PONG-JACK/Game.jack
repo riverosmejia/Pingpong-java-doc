@@ -88,11 +88,17 @@ class Game {
         }
 
         // Salida por izquierda o derecha → reinicia bola
-        if (~(ballX > 0)) {
-            do ball.reset(width / 2, height / 2,1,1);
+        // Salida por izquierda (ballX <= 0)
+        if (ballX > 0) {
+            // sigue normal
+        } else {
+            do ball.reset(width / 2, height / 2, 1, 1);
         }
+
+
+        // Salida por derecha (ballX + ballD >= width)
         if (~((ballX + ballD) < width)) {
-            do ball.reset(width / 2, height / 2,1,1);
+            do ball.reset(width / 2, height / 2, 1, 1);
         }
 
         return;
