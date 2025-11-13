@@ -1,7 +1,10 @@
 class Game {
     field Player player1, player2;
     field Ball ball;
-    field int width, height;
+    field Score score;
+    field UI ui;
+    field int width, height, maxScore;
+
 
     constructor Game new(int screenWidth, int screenHeight) {
         let width = screenWidth;
@@ -10,15 +13,28 @@ class Game {
         let player1 = Player.new(10, height / 2 - 10, 0);
         let player2 = Player.new(width - 20, height / 2 - 10, 0);
         let ball = Ball.new(width / 2, height / 2, 1, 1);
+        let score = Score.new(width);
+        let ui = UI.new();
+
+        let maxScore =  ui.showMenu();  // ← Muestra el menú y guarda la elección
 
         return this;
     }
 
     method void start() {
+        var int winner;
+
         while (true) {
             do processInput();
             do update();
             do render();
+
+            let winner = score.getWinner(maxScore);
+            if (~(winner = 0)) {
+                do ui.showWinner(winner);  // ← Muestra pantalla de ganador
+                return;
+            }
+
             do Sys.wait(4);
         }
         return;
@@ -68,6 +84,7 @@ class Game {
         // Verificar si la pelota está en el borde izquierdo (tocando o pasando)
         if (ballX < (ballD / 2 + 5)) {
             // Salió por la izquierda - reiniciar
+            do score.addPoint(2);
             do ball.reset(width / 2, height / 2, 1, 1);
             return;  // No actualizar la pelota este frame
         }
@@ -75,6 +92,7 @@ class Game {
         // Verificar si la pelota está en el borde derecho
         if (ballX > (width - (ballD / 2) - 5)) {
             // Salió por la derecha - reiniciar
+            do score.addPoint(1);
             do ball.reset(width / 2, height / 2, -1, 1);
             return;  // No actualizar la pelota este frame
         }
@@ -100,6 +118,7 @@ class Game {
         do player1.draw();
         do player2.draw();
         do ball.draw();
+        do score.draw();
         return;
     }
 }

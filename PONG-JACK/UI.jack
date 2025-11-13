@@ -1,0 +1,77 @@
+class UI {
+
+    field int dummy;  // ← campo mínimo para evitar Array.new(0)
+
+    constructor UI new() {
+        let dummy = 0;
+        return this;
+    }
+
+    method int showMenu() {
+        var char key;
+        var int maxScore;
+
+        let maxScore = 0;
+
+        do Screen.clearScreen();
+
+        // Título
+        do Output.moveCursor(5, 20);
+        do Output.printString("=== PONG JACK ===");
+
+        // Opciones
+        do Output.moveCursor(7, 15);
+        do Output.printString("Seleccione el modo de juego:");
+
+        do Output.moveCursor(9, 15);
+        do Output.printString("1) Mejor de 10");
+        do Output.moveCursor(10, 15);
+        do Output.printString("2) Mejor de 20");
+        do Output.moveCursor(11, 15);
+        do Output.printString("3) Mejor de 30");
+
+        do Output.moveCursor(13, 15);
+        do Output.printString("Presione 1, 2 o 3...");
+
+        // Espera entrada válida
+        while (maxScore = 0) {
+            let key = Keyboard.keyPressed();
+            if (key = 49) { let maxScore = 10; }
+            if (key = 50) { let maxScore = 20; }
+            if (key = 51) { let maxScore = 30; }
+        }
+
+        do Screen.clearScreen();
+        do Output.moveCursor(8, 20);
+        do Output.printString("¡Comienza el juego!");
+        do Sys.wait(1000);
+        do Screen.clearScreen();
+
+        return maxScore;
+    }
+
+    /**
+     * Muestra la pantalla final con el jugador ganador.
+     */
+    method void showWinner(int winner) {
+        do Screen.clearScreen();
+        do Output.moveCursor(10, 20);
+
+        if (winner = 1) {
+            do Output.printString("¡Jugador 1 gana!");
+        } else {
+            do Output.printString("¡Jugador 2 gana!");
+        }
+
+        do Output.moveCursor(13, 15);
+        do Output.printString("Presione cualquier tecla para salir...");
+        
+        // Espera una tecla antes de terminar
+        while (Keyboard.keyPressed() = 0) { }
+
+        do Sys.halt();
+
+        return;
+    }
+}
+

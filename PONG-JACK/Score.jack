@@ -1,0 +1,76 @@
+/** Score.jack
+ *  Clase para manejar y dibujar puntajes usando Output.moveCursor + Output.printInt.
+ */
+class Score {
+    field int score1, score2;
+    field int screenWidth;
+
+    constructor Score new(int screenW) {
+        let screenWidth = screenW;
+        let score1 = 0;
+        let score2 = 0;
+        return this;
+    }
+
+    method void addPoint(int player) {
+        if (player = 1) {
+            let score1 = score1 + 1;
+        } else {
+            if (player = 2) {
+                let score2 = score2 + 1;
+            }
+        }
+        return;
+    }
+
+    /** Dibuja los puntajes en pantalla.
+     *  Usamos Output.moveCursor(row, col) y Output.printInt(n).
+     *  Las coordenadas son en caracteres (fila, columna).
+     */
+    method void draw() {
+        var int colLeft, colRight, row;
+
+        do Screen.setColor(true);
+
+        // Elegimos fila en la parte superior (fila 0) y columnas aproximadas
+        let row = 0;
+
+        // Calculamos columnas aproximadas a partir del ancho en píxeles:
+        // cada carácter ocupa 16 píxeles de alto y 8 píxeles de ancho (convención común).
+        // Para evitar dependencias, usamos columnas fijas que suelen funcionar:
+        let colLeft = 5;   // columna para jugador 1
+        let colRight = 55; // columna para jugador 2 (ajusta si tu pantalla de caracteres es más larga)
+
+        // Mover cursor y dibujar puntaje jugador 1
+        do Output.moveCursor(row, colLeft);
+        do Output.printInt(score1);
+
+        // Mover cursor y dibujar puntaje jugador 2
+        do Output.moveCursor(row, colRight);
+        do Output.printInt(score2);
+
+        return;
+    }
+
+    method int getWinner(int maxScore) {
+        if (~((score1 * 2) < (maxScore + 1))) { return 1; }
+        if (~((score2 * 2) < (maxScore + 1))) { return 2; }
+        return 0;
+    }
+
+
+    method void reset() {
+        let score1 = 0;
+        let score2 = 0;
+        return;
+    }
+
+    method int getScore(int player) {
+        if (player = 1) {
+            return score1;
+        } else {
+            return score2;
+        }
+    }
+}
+
