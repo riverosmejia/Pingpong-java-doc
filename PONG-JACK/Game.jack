@@ -3,19 +3,17 @@ class Game {
     field Ball ball;
     field int width, height;
 
-    /** Constructor: crea jugadores y bola */
     constructor Game new(int screenWidth, int screenHeight) {
         let width = screenWidth;
         let height = screenHeight;
 
-        let player1 = Player.new(10, height / 2 - 10,0);
-        let player2 = Player.new(width - 20, height / 2 - 10,0);
-        let ball = Ball.new(width / 2, height / 2,1, 1);
+        let player1 = Player.new(10, height / 2 - 10, 0);
+        let player2 = Player.new(width - 20, height / 2 - 10, 0);
+        let ball = Ball.new(width / 2, height / 2, 1, 1);
 
         return this;
     }
 
-    /** Bucle principal del juego */
     method void start() {
         while (true) {
             do processInput();
@@ -26,29 +24,27 @@ class Game {
         return;
     }
 
-    /** Procesa las teclas de entrada */
     method void processInput() {
         var char key;
         let key = Keyboard.keyPressed();
 
         // Jugador 1 (izquierda) — W/S
         if (key = 119) {
-            do player1.setDirection(-3);
+            do player1.setDirection(-5);
         } else {
             if (key = 115) {
-                do player1.setDirection(3);
+                do player1.setDirection(5);
             } else {
                 do player1.setDirection(0);
             }
         }
 
-
         // Jugador 2 (derecha) — ↑/↓
-        if (key = 131) {           // Arrow Up
-            do player2.setDirection(-3);
+        if (key = 131) {
+            do player2.setDirection(-5);
         } else {
-            if (key = 133) {       // Arrow Down
-                do player2.setDirection(3);
+            if (key = 133) {
+                do player2.setDirection(5);
             } else {
                 do player2.setDirection(0);
             }
@@ -57,54 +53,48 @@ class Game {
         return;
     }
 
-    /** Actualiza estado del juego */
     method void update() {
         var int ballX, ballY, ballD;
+
+        // Actualizar posiciones de jugadores
+        do player1.update(height);
+        do player2.update(height);
+
+        // Obtener posición ANTES de actualizar la pelota
         let ballX = ball.getX();
         let ballY = ball.getY();
         let ballD = ball.getDiameter();
 
-        // Actualizar posiciones
-        do player1.update(height);
-        do player2.update(height);
+        // Verificar si la pelota está en el borde izquierdo (tocando o pasando)
+        if (ballX < (ballD / 2 + 5)) {
+            // Salió por la izquierda - reiniciar
+            do ball.reset(width / 2, height / 2, 1, 1);
+            return;  // No actualizar la pelota este frame
+        }
+
+        // Verificar si la pelota está en el borde derecho
+        if (ballX > (width - (ballD / 2) - 5)) {
+            // Salió por la derecha - reiniciar
+            do ball.reset(width / 2, height / 2, -1, 1);
+            return;  // No actualizar la pelota este frame
+        }
+
+        // Actualizar la pelota solo si no salió de los bordes
         do ball.update();
 
         // Colisiones con palas
         if (ball.overlapsWith(player1)) {
             do ball.invertX();
+            do ball.moveTo(ball.getX() +3, ball.getY());
         }
         if (ball.overlapsWith(player2)) {
             do ball.invertX();
-        }
-
-        // Colisión con techo
-        if (~(ballY > 0)) {
-            do ball.invertY();
-        }
-
-        // Colisión con piso
-        if (~((ballY + ballD) < height)) {
-            do ball.invertX();
-        }
-
-        // Salida por izquierda o derecha → reinicia bola
-        // Salida por izquierda (ballX <= 0)
-        if (ballX > 0) {
-            // sigue normal
-        } else {
-            do ball.reset(width / 2, height / 2, 1, 1);
-        }
-
-
-        // Salida por derecha (ballX + ballD >= width)
-        if (~((ballX + ballD) < width)) {
-            do ball.reset(width / 2, height / 2, 1, 1);
+            do ball.moveTo(ball.getX() - 3, ball.getY());
         }
 
         return;
     }
 
-    /** Renderiza los elementos del juego */
     method void render() {
         do Screen.clearScreen();
         do player1.draw();
@@ -113,4 +103,3 @@ class Game {
         return;
     }
 }
-

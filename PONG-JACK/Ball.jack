@@ -9,14 +9,13 @@ class Ball {
     constructor Ball new(int xPos, int yPos, int dirX, int dirY) {
         let x = xPos;
         let y = yPos;
-        let dx = dirX; // cambio de posicion en X
-        let dy = dirY; // cambio de posicion en Y
+        let dx = dirX;
+        let dy = dirY;
         let d = 8;
         let speed = 2;
         return this;
     }
 
-    // Dibuja la esfera en pantalla
     method void draw() {
         do Screen.setColor(true);
         do Screen.drawCircle(x, y, d / 2);
@@ -29,7 +28,6 @@ class Ball {
         return;
     }
 
-    // Colisión AABB simple: devuelve 1 si overlap con player
     method boolean overlapsWith(Player p) {
         var int px, py, pw, ph;
         var int bx1, by1, bx2, by2;
@@ -44,25 +42,44 @@ class Ball {
         let bx2 = x + d;
         let by2 = y + d;
 
-        // Si no se superponen → false
         if ((bx2 < px) | (bx1 > (px + pw)) | (by2 < py) | (by1 > (py + ph))) {
             return false;
         }
 
-        // Si se solapan → true
         return true;
     }
 
-
     // Actualiza la posición y rebotes contra top/bottom
     method void update() {
+        var int newX, newY;
+        
         do erase();
-        let x = x + (dx * speed);
-        let y = y + (dy * speed);
+        
+        // Calcular nueva posición
+        let newX = x + (dx * speed);
+        let newY = y + (dy * speed);
 
-        // top/bottom collisions (screenHeight assumed 256)
-        if (y < 4) { let y = 4; let dy = -dy; }
-        if (y > 252) { let y = 252; let dy = -dy; }
+        // Aplicar límites en X (con radio de la pelota)
+        if (newX < (d / 2)) { 
+            let newX = d / 2;
+        }
+        if (newX > (511 - (d / 2))) { 
+            let newX = 511 - (d / 2);
+        }
+
+        // Rebotes verticales (con radio de la pelota)
+        if (newY < (d / 2)) { 
+            let newY = d / 2;
+            let dy = -dy;
+        }
+        if (newY > (255 - (d / 2))) { 
+            let newY = 255 - (d / 2);
+            let dy = -dy;
+        }
+
+        // Actualizar posición
+        let x = newX;
+        let y = newY;
 
         do draw();
         return;
@@ -74,23 +91,28 @@ class Ball {
     }
 
     method void invertY() {
-        let dy= -dy;
+        let dy = -dy;
+        return;
+    }
+
+    method void moveTo(int newX, int newY) {
+        let x = newX;
+        let y = newY;
         return;
     }
 
     method void reset(int cx, int cy, int dirX, int dirY) {
+        do erase();  // Borrar la pelota en su posición actual
         let x = cx;
         let y = cy;
         let dx = dirX;
         let dy = dirY;
+        do draw();   // Dibujar en la nueva posición
         return;
     }
-
-
 
     // getters
     method int getX() { return x; }
     method int getY() { return y; }
-    method int getDiameter() {return d;}
-
+    method int getDiameter() { return d; }
 }
